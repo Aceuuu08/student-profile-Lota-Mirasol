@@ -1,10 +1,10 @@
 <?php
 include_once("../db.php");
-include_once("../town_city.php");
+include_once("../province.php");
 
 $db = new Database();
 $connection = $db->getConnection();
-$town = new TownCity($db);
+$student = new Province($db);
 
 ?>
 <!DOCTYPE html>
@@ -21,12 +21,12 @@ $town = new TownCity($db);
     <?php include('../includes/navbar.php'); ?>
 
     <div class="content">
-    <h2>Town Views</h2>
+    <h2>Province Views</h2>
     <table class="orange-theme">
         <thead>
             <tr>
-                <th>No.</th>
-                <th>Place</th>
+                <th>Id.</th>
+                <th>Name</th>
                 <th>Action </th>
                
             </tr>
@@ -34,7 +34,7 @@ $town = new TownCity($db);
         <tbody>
             <!-- You'll need to dynamically generate these rows with data from your database -->
             <?php
-            $results = $town->getAll(); 
+            $results = $student->getAll(); 
             foreach ($results as $result) {
             ?>
             <tr>
@@ -42,9 +42,9 @@ $town = new TownCity($db);
                 <td><?php echo $result['name']; ?></td>
           
                 <td>
-                    <a href="town_edit.php?id=<?php echo $result['id']; ?>">Edit</a>
+                    <a href="province_edit.php?id=<?php echo $result['id']; ?>">Edit</a>
                     |
-                    <a href="town_delete.php?id=<?php echo $result['id']; ?>">Delete</a>
+                    <a href="province_delete.php?id=<?php echo $result['id']; ?>">Delete</a>
                 </td>
             </tr>
         <?php } ?>
@@ -53,7 +53,7 @@ $town = new TownCity($db);
         </tbody>
     </table>
         
-    <a class="button-link" href="town_add.php">Add New Record</a>
+    <a class="button-link" href="province_add.php">Add New Record</a>
 
         </div>
         

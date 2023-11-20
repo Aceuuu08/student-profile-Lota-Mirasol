@@ -7,13 +7,12 @@ class Student {
     public function __construct($db) {
         $this->db = $db;
     }
-
     public function create($data) {
         try {
             // Prepare the SQL INSERT statement
             $sql = "INSERT INTO students(student_number, first_name, middle_name, last_name, gender, birthday) VALUES(:student_number, :first_name, :middle_name, :last_name, :gender, :birthday);";
             $stmt = $this->db->getConnection()->prepare($sql);
-
+            
             // Bind values to placeholders
             $stmt->bindParam(':student_number', $data['student_number']);
             $stmt->bindParam(':first_name', $data['first_name']);

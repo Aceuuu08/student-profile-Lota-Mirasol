@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="gender" id="gender" value="<?php echo $studentData['gender']; ?>">
         
         <label for="birthday">Birthdate:</label>
-        <input type="text" name="birthday" id="birthday" value="<?php echo $studentData['birthday']; ?>">
+        <input type="date" name="birthday" id="birthday" value="<?php echo $studentData['birthday']; ?>">
         
         <input type="submit" value="Update">
     </form>
