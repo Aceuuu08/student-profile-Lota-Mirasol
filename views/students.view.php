@@ -31,6 +31,11 @@ $student = new Student($db);
                 <th>Last Name</th>
                 <th>Gender</th>
                 <th>Birthdate</th>
+                <th>Contact</th>
+                <th>Street</th>
+                <th>Town_City</th>
+                <th>Province</th>
+                <th>Zip Code</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -47,6 +52,11 @@ $student = new Student($db);
                 <td><?php echo $result['last_name']; ?></td>
                 <td><?php echo ($result['gender'] == '0') ? 'F' : 'M'; ?></td>
                 <td><?php echo date('M j Y', strtotime($result['birthday'])); ?></td>
+                <td><?php echo $result['contact_number']; ?></td>
+                <td><?php echo $result['street']; ?></td>
+                <td><?php echo $result['town_city']; ?></td>
+                <td><?php echo $result['province']; ?></td>
+                <td><?php echo $result['zip_code']; ?></td>
                 <td>
                     <a href="student_edit.php?id=<?php echo $result['id']; ?>">Edit</a>
                     |
@@ -60,53 +70,7 @@ $student = new Student($db);
     </table>
         
     <a class="button-link" href="student_add.php">Add New Record</a>
-
-        </div>
-        
-        
-        <!-- Include the header -->
-  
+    </div>
     <?php include('../templates/footer.html'); ?>
- <!-- Include the header -->
-    <div class="content">
-    <h2>Student Details </h2>
-    <table class="orange-theme">
-        <thead>
-            <tr>
-                <th>Student ID</th>
-                <th>Contact Number</th>
-                <th>Street</th>
-                <th>Town City</th>
-                <th>Province</th>
-                <th>Zip Code</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- You'll need to dynamically generate these rows with data from your database -->
-            <?php
-            $results = $student->displayAll(); 
-            foreach ($results as $result) {
-            ?>
-            <tr>
-                <td><?php echo $result['student_number']; ?></td>
-                <td><?php echo $result['first_name']; ?></td>
-                <td><?php echo $result['middle_name']; ?></td>
-                <td><?php echo $result['last_name']; ?></td>
-                <td><?php echo ($result['gender'] == '0') ? 'F' : 'M'; ?></td>
-                <td><?php echo date('M j Y', strtotime($result['birthday'])); ?></td>
-                <td>
-                    <a href="student_edit.php?id=<?php echo $result['id']; ?>">Edit</a>
-                    |
-                    <a href="student_delete.php?id=<?php echo $result['id']; ?>">Delete</a>
-                </td>
-            </tr>
-            
-        <?php } ?>
-        
-   </tbody>
-    </table>
-        
-
-    <p></p>
 </body>
 </html>

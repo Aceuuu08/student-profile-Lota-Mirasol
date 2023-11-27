@@ -68,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="content">
     <h1>Add Student Data</h1>
-    <form action="" method="post" class="centered-form">
+    <form action="" method="post" class="centered-form" >
         <label for="student_number">Student Number:</label>
         <input type="text" name="student_number" id="student_number" required>
 
@@ -95,9 +95,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <label for="street">Street:</label>
         <input type="text" id="street" name="street" required>
-
-        
-
         <label for="town_city">Town / City:</label>
         <select name="town_city" id="town_city" required>
         <?php
@@ -105,7 +102,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $database = new Database();
             $towns = new TownCity($database);
             $results = $towns->getAll();
-            // echo print_r($results);
             foreach($results as $result)
             {
                 echo '<option value="' . $result['id'] . '">' . $result['name'] . '</option>';
@@ -120,7 +116,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $database = new Database();
             $provinces = new Province($database);
             $results = $provinces->getAll();
-            // echo print_r($results);
             foreach($results as $result)
             {
                 echo '<option value="' . $result['id'] . '">' . $result['name'] . '</option>';
@@ -136,6 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         <input type="submit" value="Add Student">
     </form>
+    
     </div>
     
     <?php include('../templates/footer.html'); ?>

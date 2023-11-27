@@ -20,6 +20,7 @@ class Province {
             throw $e; // Re-throw the exception for higher-level handling
         }
     }
+    
     public function create($data) {
         try {
             // Prepare the SQL INSERT statement

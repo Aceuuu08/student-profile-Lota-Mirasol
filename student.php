@@ -7,6 +7,39 @@ class Student {
     public function __construct($db) {
         $this->db = $db;
     }
+    
+    public function getGenderCount($gender) {
+        try {
+            $sql = "SELECT COUNT(*) as count FROM students WHERE gender = :gender";
+            $stmt = $this->db->getConnection()->prepare($sql);
+            $stmt->bindValue(':gender', $gender);
+            $stmt->execute();
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $result['count'];
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            throw $e; // Re-throw the exception for higher-level handling
+        }
+    }
+
+    public function getProvince($province) {
+        try {
+            $sql = "SELECT COUNT(*) as count FROM province WHERE name = :name";
+            $stmt = $this->db->getConnection()->prepare($sql);
+            $stmt->bindValue(':name', $province);
+            $stmt->execute();
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $result['count'];
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            throw $e; // Re-throw the exception for higher-level handling
+        }
+    }
+
     public function create($data) {
         try {
             // Prepare the SQL INSERT statement
@@ -42,7 +75,11 @@ class Student {
         try {
             $connection = $this->db->getConnection();
 
-            $sql = "SELECT * FROM students WHERE id = :id";
+            $sql = "SELECT students.*, student_details.contact_number, student_details.street, student_details.town_city, student_details.province, student_details.zip_code
+            FROM students
+            LEFT JOIN student_details ON students.id = student_details.student_id
+            WHERE students.id = :id";
+         
             $stmt = $connection->prepare($sql);
             $stmt->bindValue(':id', $id);
             $stmt->execute();
@@ -59,29 +96,53 @@ class Student {
 
     public function update($id, $data) {
         try {
-            $sql = "UPDATE students SET
-                    student_number = :student_number,
-                    first_name = :first_name,
-                    middle_name = :middle_name,
-                    last_name = :last_name,
-                    gender = :gender,
-                    birthday = :birthday
-                    WHERE id = :id";
+            $this->db->getConnection()->beginTransaction();
 
-            $stmt = $this->db->getConnection()->prepare($sql);
-            // Bind parameters
-            $stmt->bindValue(':id', $data['id']);
-            $stmt->bindValue(':student_number', $data['student_number']);
-            $stmt->bindValue(':first_name', $data['first_name']);
-            $stmt->bindValue(':middle_name', $data['middle_name']);
-            $stmt->bindValue(':last_name', $data['last_name']);
-            $stmt->bindValue(':gender', $data['gender']);
-            $stmt->bindValue(':birthday', $data['birthday']);
+        // Update student_details table
+        $sqlDetails = "UPDATE student_details SET
+            contact_number = :contact_number,
+            street = :street,
+            town_city = :town_city,
+            province = :province,
+            zip_code = :zip_code
+            WHERE student_id = :id";
 
-            // Execute the query
-            $stmt->execute();
+        $stmtDetails = $this->db->getConnection()->prepare($sqlDetails);
+        $stmtDetails->bindValue(':id', $id);
+        $stmtDetails->bindValue(':contact_number', $data['contact_number']);
+        $stmtDetails->bindValue(':street', $data['street']);
+        $stmtDetails->bindValue(':town_city', $data['town_city']);
+        $stmtDetails->bindValue(':province', $data['province']);
+        $stmtDetails->bindValue(':zip_code', $data['zip_code']);
+        $stmtDetails->execute();
 
-            return $stmt->rowCount() > 0;
+        // Update students table
+        $sqlStudents = "UPDATE students SET
+            student_number = :student_number,
+            first_name = :first_name,
+            middle_name = :middle_name,
+            last_name = :last_name,
+            gender = :gender,
+            birthday = :birthday
+            WHERE id = :id";
+
+        $stmtStudents = $this->db->getConnection()->prepare($sqlStudents);
+        $stmtStudents->bindValue(':id', $id);
+        $stmtStudents->bindValue(':student_number', $data['student_number']);
+        $stmtStudents->bindValue(':first_name', $data['first_name']);
+        $stmtStudents->bindValue(':middle_name', $data['middle_name']);
+        $stmtStudents->bindValue(':last_name', $data['last_name']);
+        $stmtStudents->bindValue(':gender', $data['gender']);
+        $stmtStudents->bindValue(':birthday', $data['birthday']);
+        $stmtStudents->execute();
+
+
+        
+        // Commit the transaction if everything executed successfully
+        $this->db->getConnection()->commit();
+
+        // Check if any rows were affected (record updated in students table)
+        return $stmtStudents->rowCount() > 0;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             throw $e; // Re-throw the exception for higher-level handling
@@ -90,17 +151,25 @@ class Student {
 
     public function delete($id) {
         try {
-            $sql = "DELETE FROM students WHERE id = :id";
-            $stmt = $this->db->getConnection()->prepare($sql);
-            $stmt->bindValue(':id', $id);
-            $stmt->execute();
+            $this->db->getConnection()->beginTransaction();
 
-            // Check if any rows were affected (record deleted)
-            if ($stmt->rowCount() > 0) {
-                return true; // Record deleted successfully
-            } else {
-                return false; // No records were deleted (student_id not found)
-            }
+        // Delete from student_details table
+        $sqlDetails = "DELETE FROM student_details WHERE student_id = :id";
+        $stmtDetails = $this->db->getConnection()->prepare($sqlDetails);
+        $stmtDetails->bindValue(':id', $id);
+        $stmtDetails->execute();
+
+        // Delete from students table
+        $sqlStudents = "DELETE FROM students WHERE id = :id";
+        $stmtStudents = $this->db->getConnection()->prepare($sqlStudents);
+        $stmtStudents->bindValue(':id', $id);
+        $stmtStudents->execute();
+
+        // Commit the transaction if everything executed successfully
+        $this->db->getConnection()->commit();
+
+        // Check if any rows were affected (record deleted from students table)
+        return $stmtStudents->rowCount() > 0;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             throw $e; // Re-throw the exception for higher-level handling
@@ -109,7 +178,9 @@ class Student {
 
     public function displayAll(){
         try {
-            $sql = "SELECT * FROM students LIMIT 10"; // Modify the table name to match your database
+            $sql = "SELECT students.*, student_details.contact_number, student_details.street, student_details.town_city, student_details.province, student_details.zip_code
+            FROM students
+            LEFT JOIN student_details ON students.id = student_details.student_id;"; // Modify the table name to match your database
             $stmt = $this->db->getConnection()->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -194,6 +265,7 @@ $update_data = [
     'last_name' => 'Doe',
     'gender' => '0',
     'birthday' => '1995-05-20',
+
 ];
 $student->testUpdateStudent($student_id, $update_data);
 

@@ -28,6 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'last_name' => $_POST['last_name'],
         'gender' => $_POST['gender'],
         'birthday' => $_POST['birthday'],
+        'contact_number' => $_POST['contact_number'],
+        'street' => $_POST['street'],
+        'town_city' => $_POST['town_city'],
+        'province' => $_POST['province'],
+        'zip_code' => $_POST['zip_code'],
     ];
 
     $db = new Database();
@@ -76,6 +81,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         <label for="birthday">Birthdate:</label>
         <input type="date" name="birthday" id="birthday" value="<?php echo $studentData['birthday']; ?>">
+
+        <label for="contact_number">Contact Number:</label>
+        <input type="text" name="contact_number" id="contact_number" value="<?php echo $studentData['contact_number']; ?>">
+        
+        <label for="street">Street:</label>
+        <input type="text" name="street" id="street" value="<?php echo $studentData['street']; ?>">
+
+        <label for="town_city">Town City:</label>
+        <input type="text" name="town_city" id="town_city" value="<?php echo $studentData['town_city']; ?>">
+
+        <label for="province">Province:</label>
+        <input type="text" name="province" id="province" value="<?php echo $studentData['province']; ?>">
+      
+          
+        <label for="zip_code">Zip Code:</label>
+        <input type="text" name="zip_code" id="zip_code" value="<?php echo $studentData['zip_code']; ?>">
         
         <input type="submit" value="Update">
     </form>

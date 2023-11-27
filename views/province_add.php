@@ -36,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <!-- <label for="id">Town ID:</label>
         <input type="text" name="id" id="id" required> -->
 
-        <label for="name">Town Name:</label>
+        <label for="name">Province Name:</label>
         <input type="text" name="name" id="name" required>
 
-        <input type="submit" value="Add Town City">
+        <input type="submit" value="Add Province">
     </form>
     </div>
     
