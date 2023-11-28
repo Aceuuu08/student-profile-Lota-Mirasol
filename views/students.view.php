@@ -40,7 +40,7 @@ $student = new Student($db);
             </tr>
         </thead>
         <tbody>
-            <!-- You'll need to dynamically generate these rows with data from your database -->
+
             <?php
             $results = $student->displayAll(); 
             foreach ($results as $result) {

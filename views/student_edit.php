@@ -1,17 +1,16 @@
 <?php
-include_once("../db.php"); // Include the Database class file
-include_once("../student.php"); // Include the Student class file
+include_once("../db.php"); 
+include_once("../student.php"); 
+include_once("../student_details.php"); 
+include_once("../town_city.php");
+include_once("../province.php");
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
-
-    // Fetch student data by ID from the database
     $db = new Database();
     $student = new Student($db);
     $studentData = $student->read($id); // Implement the read method in the Student class
-
     if ($studentData) {
-        // The student data is retrieved, and you can pre-fill the edit form with this data.
     } else {
         echo "Student not found.";
     }
@@ -37,7 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $db = new Database();
     $student = new Student($db);
-
     // Call the edit method to update the student data
     if ($student->update($id, $data)) {
         echo "Record updated successfully.";
@@ -55,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Edit Student</title>
 </head>
 <body>
-    <!-- Include the header and navbar -->
+
     <?php include('../templates/header.html'); ?>
     <?php include('../includes/navbar.php'); ?>
 
@@ -87,13 +85,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         <label for="street">Street:</label>
         <input type="text" name="street" id="street" value="<?php echo $studentData['street']; ?>">
+        
+        
+        <label for="town_city">Town / City:</label>
+        <select name="town_city" id="town_city" required>
+        <?php
 
-        <label for="town_city">Town City:</label>
-        <input type="text" name="town_city" id="town_city" value="<?php echo $studentData['town_city']; ?>">
+            $database = new Database();
+            $towns = new TownCity($database);
+            $results = $towns->getAll();
+            foreach($results as $result)
+            {
+                echo '<option value="' . $result['id'] . '">' . $result['name'] . '</option>';
+            }
+        ?>      
+        </select>
+
 
         <label for="province">Province:</label>
-        <input type="text" name="province" id="province" value="<?php echo $studentData['province']; ?>">
-      
+        <select name="province" id="province" required>
+        <?php
+
+            $database = new Database();
+            $provinces = new Province($database);
+            $results = $provinces->getAll();
+            foreach($results as $result)
+            {
+                echo '<option value="' . $result['id'] . '">' . $result['name'] . '</option>';
+            }
+        ?>  
+        </select> 
           
         <label for="zip_code">Zip Code:</label>
         <input type="text" name="zip_code" id="zip_code" value="<?php echo $studentData['zip_code']; ?>">

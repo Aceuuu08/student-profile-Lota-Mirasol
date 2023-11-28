@@ -1,10 +1,10 @@
 <?php
 include_once("../db.php");
-include_once("../town_city.php");
+include_once("../student.php");
 
 $db = new Database();
 $connection = $db->getConnection();
-$town = new TownCity($db);
+$student = new Student($db);
 
 ?>
 <!DOCTYPE html>
@@ -14,53 +14,51 @@ $town = new TownCity($db);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Records</title>
     <link rel="stylesheet" type="text/css" href="../css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js">
+</script>
 </head>
 <body>
-    <!-- Include the header -->
     <?php include('../templates/header.html'); ?>
     <?php include('../includes/navbar.php'); ?>
 
+    
     <div class="content">
-    <h2>Reports 3</h2>
-    <table class="orange-theme">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>Place</th>
-                <th>Action </th>
-               
-            </tr>
-        </thead>
-        <tbody>
-            <!-- You'll need to dynamically generate these rows with data from your database -->
-            <?php
-            $results = $town->getAll(); 
-            foreach ($results as $result) {
-            ?>
-            <tr>
-                <td><?php echo $result['id']; ?></td>
-                <td><?php echo $result['name']; ?></td>
-          
-                <td>
-                    <a href="town_edit.php?id=<?php echo $result['id']; ?>">Edit</a>
-                    |
-                    <a href="town_delete.php?id=<?php echo $result['id']; ?>">Delete</a>
-                </td>
-            </tr>
-        <?php } ?>
+        <canvas id="birthYearChart" width="600" height="600"></canvas>
 
-           
-        </tbody>
-    </table>
-        
-    <a class="button-link" href="town_add.php">Add New Record</a>
+        <script>
+            var birthYearData = <?php echo json_encode($student->Millennials()); ?>;
+            var labels = birthYearData.map(item => item.birth_year_group);
+            var dataCounts = birthYearData.map(item => item.count);
+            // Chart.js code for pie chart
+            var ctx = document.getElementById('birthYearChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataCounts,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: false, 
+                }
+            });
+        </script>
+    </div>
 
-        </div>
-        
-        <!-- Include the header -->
-  
-    <?php include('../templates/footer.html'); ?>
+  <div class="content">
+        <h1>Millennials student</h1>
+        <p>In pie graph above we diveded the student who are born from 2000 onward and those who born before 2000. We classified the students who is born in 2000 as Millennials while those who born before as Pre-Millennials.</p>
+    </div>
+        <?php include('../templates/footer.html'); ?>
 
 
+<p></p>
 </body>
 </html>

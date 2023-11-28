@@ -16,8 +16,8 @@ class TownCity {
 
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            // Handle errors (log or display)
-            throw $e; // Re-throw the exception for higher-level handling
+
+            throw $e;
         }
     }
     public function create($data) {
@@ -25,13 +25,10 @@ class TownCity {
             // Prepare the SQL INSERT statement
             $sql = "INSERT INTO town_city(name) VALUES(:name);";
             $stmt = $this->db->getConnection()->prepare($sql);
-
             // Bind values to placeholders
             $stmt->bindParam(':name', $data['name']);
-
             // Execute the INSERT query
             $stmt->execute();
-
             // Check if the insert was successful
              
             if($stmt->rowCount() > 0)

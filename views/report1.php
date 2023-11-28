@@ -17,7 +17,7 @@ $student = new Student($db);
 </script>
 </head>
 <body>
-    <!-- Include the header -->
+
     <?php include('../templates/header.html'); ?>
     <?php include('../includes/navbar.php'); ?>
 
@@ -26,10 +26,9 @@ $student = new Student($db);
 </div>
   
     <script>
-    // Assuming you have a PHP variable containing data, e.g., $studentData
-    var maleCount = <?php echo $student->getGenderCount(1); ?>;
-    var femaleCount = <?php echo $student->getGenderCount(0); ?>;
-    // Chart.js code to create a bar chart
+    var maleCount = <?php echo $student->GenderCount(1); ?>;
+    var femaleCount = <?php echo $student->GenderCount(0); ?>;
+    // Chart.js code for bar chart
     var ctx = document.getElementById('studentChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
@@ -38,9 +37,9 @@ $student = new Student($db);
             datasets: [{
                 label: 'Number of Students by Gender',
                 data: [maleCount, femaleCount],
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
+                backgroundColor: [                 
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 99, 132, 0.8)',
                 ],
                 borderColor: [
                     'rgba(75, 192, 192, 1)',
@@ -61,11 +60,9 @@ $student = new Student($db);
 </script>
   <div class="content">
         <h1>Number of Male and Female Students</h1>
-        <p>There are more males in the school than females.</p>
+        <p>In the chart above you will see how many female and male enrolled in the school.</p>
     </div>
         <?php include('../templates/footer.html'); ?>
 
-
-<p></p>
 </body>
 </html>

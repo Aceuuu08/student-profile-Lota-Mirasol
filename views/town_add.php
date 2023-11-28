@@ -33,8 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="content">
     <h1>Add Town City</h1>
     <form action="" method="post" class="centered-form">
-        <!-- <label for="id">Town ID:</label>
-        <input type="text" name="id" id="id" required> -->
+
 
         <label for="name">Town Name:</label>
         <input type="text" name="name" id="name" required>

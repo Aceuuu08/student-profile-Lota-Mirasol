@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     'name' => $_POST['name'],
     ];
 
-    // Instantiate the Database and Town City classes
+    // Instantiate the Database and province classes
     $database = new Database();
     $town_city = new Province($database);
     $town_city_id = $town_city->create($data);
@@ -33,8 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="content">
     <h1>Add Province</h1>
     <form action="" method="post" class="centered-form">
-        <!-- <label for="id">Town ID:</label>
-        <input type="text" name="id" id="id" required> -->
+
 
         <label for="name">Province Name:</label>
         <input type="text" name="name" id="name" required>

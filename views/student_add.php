@@ -1,7 +1,7 @@
 <?php
-include_once("../db.php"); // Include the Database class file
-include_once("../student.php"); // Include the Student class file
-include_once("../student_details.php"); // Include the Student class file
+include_once("../db.php"); 
+include_once("../student.php"); 
+include_once("../student_details.php"); 
 include_once("../town_city.php");
 include_once("../province.php");
 
@@ -18,26 +18,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     'birthday' => $_POST['birthday'],
     ];
 
-    // Instantiate the Database and Student classes
     $database = new Database();
     $student = new Student($database);
     $student_id = $student->create($data);
     
     if ($student_id) {
-        // Student record successfully created
         
-        // Retrieve student details from the form
         $studentDetailsData = [
-            'student_id' => $student_id, // Use the obtained student ID
+            'student_id' => $student_id, 
             'contact_number' => $_POST['contact_number'],
             'street' => $_POST['street'],
             'zip_code' => $_POST['zip_code'],
             'town_city' => $_POST['town_city'],
             'province' => $_POST['province'],
-            // Other student details fields
+
         ];
 
-        // Create student details linked to the student
         $studentDetails = new StudentDetails($database);
         
         if ($studentDetails->create($studentDetailsData)) {
@@ -46,11 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Failed to insert the record.";
         }
     }
-
-    
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Add Student Data</title>
 </head>
 <body>
-    <!-- Include the header and navbar -->
+
     <?php include('../templates/header.html'); ?>
     <?php include('../includes/navbar.php'); ?>
 

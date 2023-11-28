@@ -14,28 +14,46 @@ $student = new Student($db);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Records</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css">
+
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js">
+    
 </script>
+<style>
+    .button-link {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: green;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button-link:hover {
+            background-color: black;
+        }
+    </style>
 
 </head>
 <body>
-    <!-- Include the header -->
+    <!--header -->
     <?php include('templates/header.html'); ?>
     <?php include('includes/navbar.php'); ?>
 
-
-<div class="content">
-    <canvas id="studentChart" width="400" height="200"></canvas>
-</div>
-
-        <!-- Include the footer -->
-    <?php include('templates/footer.html'); ?>
+    <div class="content">
+        <h1>WELCOME</h1>
+        <p>In here you can find the records of the student enrolled in PSU.</p>
+    </div>
+   
+    <div class="content">
+        <canvas id="studentChart" width="600" height="600"></canvas>
+    </div>
     <script>
-    // Assuming you have a PHP variable containing data, e.g., $studentData
-    var maleCount = <?php echo $student->getGenderCount(1); ?>;
-    var femaleCount = <?php echo $student->getGenderCount(0); ?>;
+    // connection to student.php
+    var maleCount = <?php echo $student->GenderCount(1); ?>;
+    var femaleCount = <?php echo $student->GenderCount(0); ?>;
 
-    // Chart.js code to create a bar chart
+    // Chart.js code for bar chart
     var ctx = document.getElementById('studentChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
@@ -44,9 +62,9 @@ $student = new Student($db);
             datasets: [{
                 label: 'Number of Students by Gender',
                 data: [maleCount, femaleCount],
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
+                backgroundColor: [                 
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 99, 132, 0.8)',
                 ],
                 borderColor: [
                     'rgba(75, 192, 192, 1)',
@@ -55,14 +73,90 @@ $student = new Student($db);
                 borderWidth: 1
             }]
         },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+                options: {
+                    responsive: false, //to make the graph organize
                 }
-            }
-        }
     });
 </script>
+<div class="content">
+        <h1>Number of Male and Female Students</h1>
+        <p>In the chart above you will see how many female and male enrolled in the school.</p>
+        <a class="button-link" href="/views/report1.php">View</a>
+    </div>
+<div class="content">
+        <canvas id="birthdayChart" width="600" height="600"></canvas>
+
+        <script>
+            // connection to student.php
+            var monthData = <?php echo json_encode($student->BirthMonth()); ?>;
+            var months = Object.keys(monthData);
+            var counts = Object.values(monthData);
+
+            // Chart.js code for bar chart
+            var ctx = document.getElementById('birthdayChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Number of Students by Birth Month',
+                        data: counts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+                options: {
+                    responsive: false, 
+                }
+            });
+        </script>
+    </div>
+    <div class="content">
+        <h1>Number of Male and Female Students who share same birth month's</h1>
+        <p>In the graph above you will know how many students have the same birth month in the whole school.</p>
+        <a class="button-link" href="/views/report2.php">View</a>
+    </div>
+    <div class="content">
+        <canvas id="birthYearChart" width="600" height="600 "></canvas>
+
+        <script>
+            var birthYearData = <?php echo json_encode($student->Millennials()); ?>;
+            var labels = birthYearData.map(item => item.birth_year_group);
+            var dataCounts = birthYearData.map(item => item.count);
+             // Chart.js code for pie chart
+            var ctx = document.getElementById('birthYearChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataCounts,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: false,
+                }
+            });
+        </script>
+    </div>
+    <div class="content">
+        <h1>Millennials student</h1>
+        <p>In pie graph above we diveded the student who are born from 2000 onward and those who born before 2000. We classified the students who is born in 2000 as Millennials while those who born before as Pre-Millennials.</p>
+        <a class="button-link" href="/views/report3.php">View</a>
+    </div>
+    <?php include('templates/footer.html'); ?>
 </body>
 </html>

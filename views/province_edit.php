@@ -5,7 +5,7 @@ include_once("../province.php");
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Fetch Town City data by ID from the database
+    // Fetch province data by ID from the database
     $db = new Database();
     $province = new Province($db);
     $province_Data = $province->read($id); 
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $db = new Database();
     $provinces = new Province($db);
 
-    // Call the edit method to update the town city data
+    // Call the edit method to update the province data
     if ($provinces->update($id, $data)) {
         echo "Record updated successfully.";
     } else {
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php include('../includes/navbar.php'); ?>
 
     <div class="content">
-    <h2>Edit Student Information</h2>
+    <h2>Edit Province Information</h2>
     <form action="" method="post">
         <input type="hidden" name="id" value="<?php echo $province_Data['id']; ?>">
         <label for="birthday">Name: </label>

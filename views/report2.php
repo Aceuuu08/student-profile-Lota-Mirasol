@@ -17,51 +17,49 @@ $student = new Student($db);
 </script>
 </head>
 <body>
-    <!-- Include the header -->
     <?php include('../templates/header.html'); ?>
     <?php include('../includes/navbar.php'); ?>
 
     <div class="content">
-    <canvas id="studentChart" width="150"height="50"></canvas>
-</div>
-  
-    <script>
-    // Assuming you have a PHP variable containing data, e.g., $studentData
-    var provinceA = <?php echo $student->getProvince(1); ?>;
-    var provinceB = <?php echo $student->getProvince(1005); ?>;
-    // Chart.js code to create a bar chart
-    var ctx = document.getElementById('studentChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Male', 'Female'],
-            datasets: [{
-                label: 'Number of Students by Gender',
-                data: [provinceA, provinceB],
-                backgroundColor: [
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(255, 99, 132, 1)',
-                ],
-                borderWidth: 1,
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
+        <canvas id="birthdayChart" width="600" height="600"></canvas>
+
+        <script>
+            var monthData = <?php echo json_encode($student->BirthMonth()); ?>;
+
+            var months = Object.keys(monthData);
+            var counts = Object.values(monthData);
+
+           // Chart.js code for bar chart
+            var ctx = document.getElementById('birthdayChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Number of Students by Birth Month',
+                        data: counts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                },
+                options: {
+                    responsive: false, 
                 }
-            }
-        }
-    });
-    
-</script>
+            });
+        </script>
+    </div>
+
   <div class="content">
-        <h1>Number of Male and Female Students</h1>
-        <p>There are more males in the school than females.</p>
+        <h1>Number of Male and Female Students who share same birth month's</h1>
+        <p>In the graph above you will know how many students have the same birth month in the whole school.</p>
     </div>
         <?php include('../templates/footer.html'); ?>
 
